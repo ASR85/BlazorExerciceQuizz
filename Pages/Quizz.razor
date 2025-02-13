@@ -1,0 +1,55 @@
+﻿@page "/quizz/{Prenom?}"
+@code {
+    [Parameter]
+    public string Prenom { get; set; }
+
+    private int index = 0;
+    private List<string> reponses = new List<string>();
+
+    private List<(string question, string option1, string option2)> questions = new List<(string, string, string)>
+    {
+        ("Si vous pouviez être un super-héros, choisiriez-vous de voler ou d'être invisible?", "Voler", "Être invisible"),
+        ("Aimez-vous les ananas sur les pizzas?", "Oui", "Non"),
+        ("Que préférez-vous : une journée sans téléphone ou une journée sans nourriture?", "Sans téléphone", "Sans nourriture"),
+        ("Si vous deviez choisir entre manger de la pizza ou des hamburgers pour le reste de votre vie, que choisiriez-vous?", "Pizza", "Hamburgers"),
+        ("Aimez-vous les Chupa Chups ?", "Oui", "Non")
+    };
+
+    //Si pas de paramètre passé on affiche invité
+    protected override void OnInitialized()
+    {
+        
+        if (string.IsNullOrEmpty(Prenom))
+        {
+            Prenom = "Invité";
+        }
+    }
+
+    //On détermine l'option choisie, ajoute la répnse et passe à la question suivante
+    private void Repondre(bool reponse)
+    {
+        string reponseTexte = reponse ? questions[index].option1 : questions[index].option2;
+        reponses.Add(reponseTexte);
+        index++;
+    }
+}
+<div>
+    <h3>Bonjour, @Prenom!</h3>
+    <!--On vérifi s'il y a encore des questions et on affiche les réponses-->
+    @if (index < questions.Count)
+    {
+        <p>@questions[index].question</p>
+        <button @onclick="() => Repondre(true)">@questions[index].option1</button>
+        <button @onclick="() => Repondre(false)">@questions[index].option2</button>
+    }
+    else
+    {
+        <p>Quizz terminé. Merci pour vos réponses ! Voici un résumé de vos choix :</p>
+        <ul>
+            @for (int i = 0; i < questions.Count; i++)
+            {
+                <li>@questions[i].question : @reponses[i]</li>
+            }
+        </ul>
+    }
+</div>

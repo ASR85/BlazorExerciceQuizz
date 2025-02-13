@@ -1,0 +1,90 @@
+﻿@page "/Formulaire"
+
+@using BlazorExerciceQuizz.Model
+
+<EditForm Model="@personne" OnValidSubmit="@HandleValidSubmit" class="form-container">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="nom">Nom:</label>
+        <InputText id="nom" class="form-control" @bind-Value="personne.Nom" />
+        <ValidationMessage For="@(() => personne.Nom)" class="validation-message" />
+    </div>
+
+    <div class="form-group">
+        <label for="prenom">Prénom:</label>
+        <InputText id="prenom" class="form-control" @bind-Value="personne.Prenom" />
+        <ValidationMessage For="@(() => personne.Prenom)" class="validation-message" />
+    </div>
+
+    <div class="form-group">
+        <label for="dateNaissance">Date de Naissance:</label>
+        <InputDate id="dateNaissance" class="form-control" @bind-Value="personne.DateNaissance" />
+        <ValidationMessage For="@(() => personne.DateNaissance)" class="validation-message" />
+    </div>
+
+    <div class="form-group">
+        <label for="typePersonne">Type de Personne:</label>
+        <InputSelect id="typePersonne" class="form-control" @bind-Value="personne.TypePersonne">
+            <option value="">Sélectionner...</option>
+            @foreach (var type in Enum.GetValues(typeof(TypePersonne)))
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => personne.TypePersonne)" class="validation-message" />
+    </div>
+
+    <div class="form-group">
+        <label for="couleur">Couleur des Yeux:</label>
+        <InputSelect id="couleur" class="form-control" @bind-Value="personne.Couleur">
+            <option value="">Sélectionner...</option>
+            <option value="Marron" style="background-color: #A52A2A; color: white;">Marron</option>
+            <option value="Bleu" style="background-color: #0000FF; color: white;">Bleu</option>
+            <option value="Vert" style="background-color: #008000; color: white;">Vert</option>
+            <option value="Gris" style="background-color: #808080; color: white;">Gris</option>
+            <option value="Noir" style="background-color: #000000; color: white;">Noir</option>
+            <option value="Noisette" style="background-color: #D2B48C; color: white;">Noisette</option>
+            <option value="Ambre" style="background-color: #FFBF00; color: white;">Ambre</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => personne.Couleur)" class="validation-message" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
+
+    @if (message != null)
+    {
+        <div class="alert @(success ? "alert-success" : "alert-danger")" role="alert">
+            @message
+        </div>
+    }
+</EditForm>
+
+@code {
+    private Personne personne = new Personne();
+    private string message;
+    private bool success;
+
+    private void HandleValidSubmit()
+    {
+        // Simuler la logique de soumission du formulaire
+        if (IsFormValid())
+        {
+            success = true;
+            message = "Enregistré avec succès!";
+            personne = new Personne(); // Réinitialiser le formulaire
+        }
+        else
+        {
+            success = false;
+            message = "L'enregistrement a échoué. Veuillez réessayer.";
+        }
+    }
+
+    private bool IsFormValid()
+    {
+       
+        return true; // Toujours retourner true pour cet exercice
+    }
+}
